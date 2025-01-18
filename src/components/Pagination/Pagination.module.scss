@@ -1,0 +1,28 @@
+.root {
+  justify-content: left;
+  margin-top: 137px;
+  color: #42567a;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.pagination a {
+  text-decoration: none;
+
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: 1px solid #42567a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #fff;
+}

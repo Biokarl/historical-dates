@@ -1,0 +1,19 @@
+.root {
+  display: flex;
+  font-weight: 700;
+  font-size: 200px;
+  line-height: 80%;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: #5d5fef;
+  justify-content: center;
+  align-items: center;
+
+  .last {
+    color: #ef5da8;
+  }
+
+  .letterSpacing {
+    letter-spacing: 0.7em;
+  }
+}

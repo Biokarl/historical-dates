@@ -40,6 +40,7 @@ export const App = () => {
       <Header />
       <TimePeriod />
       <Pagination
+        count={count}
         isAnimating={isAnimating}
         onPrevClick={handlePrevRotate}
         onNextClick={handleNextRotate}

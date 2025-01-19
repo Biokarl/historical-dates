@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "./Pagination.module.scss";
 
-export const Pagination = ({ onNextClick, onPrevClick, isAnimating }) => {
+export const Pagination = ({ onNextClick, onPrevClick, isAnimating, count }) => {
  
 
   return (
     <div className={styles.root}>
-      <span className={styles.number}>1/6</span>
+      <span className={styles.number}>{count}/6</span>
       <div className={styles.pagination}>
         <a style={{ pointerEvents: isAnimating ? 'none' : 'auto', opacity: isAnimating ? 0.5 : 1 }} href="#" className={styles.prev} onClick={onPrevClick}>
           &#10094;

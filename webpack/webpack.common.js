@@ -10,11 +10,11 @@ const production = process.env.NODE_ENV === "production";
 module.exports = {
   entry: path.resolve(__dirname, "..", "./src/index.tsx"), //путь до папки src изменился
   output: {
+    publicPath: "https://biokarl.github.io/historical-dates/",
     path: path.resolve(__dirname, "..", "./dist"), //путь до папки dist изменился
     filename: production
       ? "static/scripts/[name].[contenthash].js" // добавляем хеш к имени файла, если запускаем в режиме production
       : "static/scripts/[name].js",
-    publicPath: "/",
     clean: true,
   },
   module: {

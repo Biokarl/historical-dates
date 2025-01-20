@@ -4,46 +4,51 @@ import { Header } from "./components/Header/Header";
 import { WrapperTime } from "./components/WrapperTime/WrapperTime";
 import { Circle } from "./components/Circle/Circle";
 import { Pagination } from "./components/Pagination/Pagination";
+import { initialDate } from "./initialDate";
 
 export const App = () => {
-  const [count, setCount] = useState(1);
   const [rotateForward, setRotateForward] = useState(false);
   const [rotateBackward, setRotateBackward] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNextRotate = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setRotateForward(true);
     setRotateBackward(false);
-    setCount((prevCount) => (prevCount === 6 ? 1 : count + 1));
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % initialDate.length);
     setTimeout(() => {
       setRotateForward(false);
       setIsAnimating(false);
-    }, 2000);
+    }, 1000);
   };
   const handlePrevRotate = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setRotateBackward(true);
     setRotateForward(false);
-    setCount((prevCount) => (prevCount === 1 ? 6 : count - 1));
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + initialDate.length) % initialDate.length);
     setTimeout(() => {
       setRotateBackward(false);
       setIsAnimating(false);
-    }, 2000);
+    }, 1000);
   };
 
   return (
     <div>
-      <Circle count={count} rotateBackward={rotateBackward} rotateForward={rotateForward} />
+      <Circle
+        rotateBackward={rotateBackward}
+        rotateForward={rotateForward}
+        currentIndex={currentIndex}
+      />
       <Header />
       <TimePeriod />
       <Pagination
-        count={count}
         isAnimating={isAnimating}
         onPrevClick={handlePrevRotate}
         onNextClick={handleNextRotate}
+        currentIndex={currentIndex}
       />
       <WrapperTime />
     </div>

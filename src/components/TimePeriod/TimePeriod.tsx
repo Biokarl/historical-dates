@@ -1,11 +1,13 @@
 import clsx from "clsx";
 import React from "react";
 import styles from "./TimePeriod.module.scss";
+import { initialDate } from "../../initialDate";
 
 export const TimePeriod = () => {
   return (
     <div className={styles.root}>
-      201<span className={styles.letterSpacing}>5</span> <span className={styles.last}>2022</span>
+      <span>{initialDate[0].rangeStart}</span>
+      <span className={styles.last}>{initialDate[0].rangeEnd}</span>
     </div>
   );
 };

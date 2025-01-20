@@ -11,26 +11,29 @@
 
   .nav {
     position: absolute;
-    right: 50px;
-    top: 50px;
+    right: 100px;
+    top: 10px;
   }
 
   .tittle {
     position: absolute;
-    top: 60px;
+    top: 25px;
+    right: 10px;
     font-weight: 700;
     font-size: 20px;
     line-height: 150%;
     color: #42567a;
   }
 
-  .number {
-    position: absolute;
-    right: 71px;
-    top: 63px;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 150%;
-    color: #42567a;
+  .minCircle {
+    transition: r 0.3s, fill 0.3s; 
+  }
+  
+  .minCircle:hover {
+    r: 28; 
+    fill: #fff; 
+    stroke-width: 2px;
+    cursor: pointer;
+    
   }
 }

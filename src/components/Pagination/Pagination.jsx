@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "./Pagination.module.scss";
+import { initialDate } from "../../initialDate";
 
-export const Pagination = ({ onNextClick, onPrevClick, isAnimating, count }) => {
+export const Pagination = ({ onNextClick, onPrevClick, isAnimating, currentIndex }) => {
  
 
   return (
     <div className={styles.root}>
-      <span className={styles.number}>{count}/6</span>
+      <span className={styles.number}>{currentIndex + 1}/{initialDate.length}</span>
       <div className={styles.pagination}>
         <a style={{ pointerEvents: isAnimating ? 'none' : 'auto', opacity: isAnimating ? 0.5 : 1 }} href="#" className={styles.prev} onClick={onPrevClick}>
           &#10094;

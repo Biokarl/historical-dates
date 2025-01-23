@@ -5,6 +5,7 @@ import { WrapperTime } from "./components/WrapperTime/WrapperTime";
 import { Circle } from "./components/Circle/Circle";
 import { Pagination } from "./components/Pagination/Pagination";
 import { initialDate } from "./initialDate";
+import gsap from "gsap";
 
 export const App = () => {
   const [rotateForward, setRotateForward] = useState(false);
@@ -37,7 +38,24 @@ export const App = () => {
   };
 
   const handleCircleClick = (index: number) => {
+    if (isAnimating) return;
+
     setCurrentIndex(index);
+
+    const totalPoints = initialDate.length;
+    const anglePerIndex = 360 / totalPoints;
+    const targetRotation = anglePerIndex * index;
+
+    setIsAnimating(true);
+    gsap.to(".circle-svg", {
+      rotation: `-${targetRotation}`,
+      transformOrigin: "center center",
+      duration: 1,
+      ease: "power1.inOut",
+      onComplete: () => {
+        setIsAnimating(false);
+      },
+    });
   };
 
   return (

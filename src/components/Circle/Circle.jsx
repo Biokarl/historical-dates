@@ -30,16 +30,20 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex, onCircleCl
     }
   }, [rotateForward, rotateBackward]);
 
+  
+
   return (
     <div className={styles.root}>
       <div className={styles.circle}>
         <svg
           ref={circleRef}
+          className="circle-svg"
           width="536"
           height="530"
           viewBox="0 0 536 530"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          overflow="visible"
         >
           <circle opacity="0.2" cx="268" cy="265" r="264.5" stroke="#42567A" />
           {initialDate.map((item, index) => {

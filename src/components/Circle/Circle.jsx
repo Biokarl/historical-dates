@@ -12,7 +12,7 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
   useEffect(() => {
     if (rotateForward) {
       gsap.to(circleRef.current, {
-        rotation: `+=${anglePerIndex * currentIndex}`, // Поворачиваем до текущего индекса
+        rotation: `-=${anglePerIndex * currentIndex}`, // Поворачиваем до текущего индекса
         transformOrigin: "center center",
         duration: 1,
         ease: "power1.inOut",
@@ -21,7 +21,7 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
 
     if (rotateBackward) {
       gsap.to(circleRef.current, {
-        rotation: `-=${anglePerIndex * currentIndex}`, // Поворачиваем до текущего индекса
+        rotation: `+=${anglePerIndex * currentIndex}`, 
         transformOrigin: "center center",
         duration: 1,
         ease: "power1.inOut",
@@ -66,6 +66,7 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
               fontSize="20"
               cursor='pointer'
               pointerEvents="none"
+              
             >
               {initialDate[hoveredIndex].periodId}
             </text>

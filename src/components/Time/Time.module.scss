@@ -1,7 +1,16 @@
 .root {
+  
   color: #9dbefd;
-  width: 320px;
+
+  display: flex;
+  justify-content: space-between;
+  margin-top: 55px;
+
+  .wrapper{
+  width: 400px;
   height: 135px;
+  flex-shrink: 0;
+  }
 
   .description {
     font-weight: 400;

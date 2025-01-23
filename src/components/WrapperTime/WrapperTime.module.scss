@@ -1,5 +1,32 @@
 .root {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; 
   margin-top: 55px;
+  overflow: hidden;
+  overflow-x: hidden;
+  cursor: grab;
+  user-select: none 
+
 }
+
+  .container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .arrow {
+    display: flex;
+    background-color: #fff;
+    border: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #42567A;
+    padding: 10px 15px;
+    align-items: center;
+    
+  }
+
+  .arrow:hover{
+    background-color: #c9cdd4;
+  }

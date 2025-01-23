@@ -61,6 +61,8 @@ export const App = () => {
   return (
     <div>
       <Circle
+        isAnimating={isAnimating}
+        setIsAnimating={setIsAnimating}
         rotateBackward={rotateBackward}
         rotateForward={rotateForward}
         currentIndex={currentIndex}

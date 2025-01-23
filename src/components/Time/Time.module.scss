@@ -1,7 +1,5 @@
 .root {
   
-  color: #9dbefd;
-
   display: flex;
   justify-content: space-between;
   margin-top: 55px;
@@ -10,7 +8,6 @@
   width: 400px;
   height: 135px;
   flex-shrink: 0;
-  }
 
   .description {
     font-weight: 400;
@@ -22,8 +19,12 @@
   .tittle {
     font-weight: 400;
     font-size: 25px;
+    font-weight: 700;
     line-height: 120%;
     text-transform: uppercase;
-    color: #3877ee;
+    color: #5d5fef;
   }
+  }
+
+ 
 }

@@ -52,8 +52,8 @@ export const initialDate: TInitialDate[] = [
     ],
   },
   {
-    rangeStart: "1520",
-    rangeEnd: "1525",
+    rangeStart: "1510",
+    rangeEnd: "1515",
     periodId: 2,
     periodName: "Литература",
     data: [
@@ -90,8 +90,8 @@ export const initialDate: TInitialDate[] = [
     ],
   },
   {
-    rangeStart: "1630",
-    rangeEnd: "1635",
+    rangeStart: "1620",
+    rangeEnd: "1625",
     periodId: 3,
     periodName: "Математика",
     data: [
@@ -128,8 +128,8 @@ export const initialDate: TInitialDate[] = [
     ],
   },
   {
-    rangeStart: "1740",
-    rangeEnd: "1745",
+    rangeStart: "1730",
+    rangeEnd: "1735",
     periodId: 4,
     periodName: "Физика",
     data: [
@@ -166,8 +166,8 @@ export const initialDate: TInitialDate[] = [
     ],
   },
   {
-    rangeStart: "1850",
-    rangeEnd: "1855",
+    rangeStart: "1840",
+    rangeEnd: "1845",
     periodId: 5,
     periodName: "Археология",
     data: [
@@ -204,8 +204,8 @@ export const initialDate: TInitialDate[] = [
     ],
   },
   {
-    rangeStart: "1960",
-    rangeEnd: "1965",
+    rangeStart: "1950",
+    rangeEnd: "1955",
     periodId: 6,
     periodName: "Живопись",
     data: [

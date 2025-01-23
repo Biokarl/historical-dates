@@ -8,6 +8,7 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex, onCircleCl
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const totalPoints = initialDate.length;
   const anglePerIndex = 360 / totalPoints;
+  const angleOffset = -anglePerIndex;
 
   useEffect(() => {
     if (rotateForward) {
@@ -41,27 +42,45 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex, onCircleCl
           xmlns="http://www.w3.org/2000/svg"
         >
           <circle opacity="0.2" cx="268" cy="265" r="264.5" stroke="#42567A" />
-          {initialDate.map((item, index) => (
-            <circle
-              className={styles.minCircle}
-              key={index}
-              id={item.periodId}
-              cx={268 + 265 * Math.cos((index * 2 * Math.PI) / totalPoints)}
-              cy={265 + 265 * Math.sin((index * 2 * Math.PI) / totalPoints)}
-              r="3"
-              fill="#42567A"
-              stroke="#42567A"
-              strokeWidth='2px'
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => onCircleClick(index)} // Handle click event
-            />
-          ))}
+          {initialDate.map((item, index) => {
+            const isActive = index === currentIndex; 
+            const angle = (index * anglePerIndex + angleOffset) * (Math.PI / 180);
+
+            return (
+              <g key={index}>
+                <circle
+                  className={styles.minCircle}
+                  cx={268 + 265 * Math.cos(angle)}
+                  cy={265 + 265 * Math.sin(angle)}
+                  r={isActive ? "28" : "3"} 
+                  fill={isActive ? "#fff" : "#42567A"} 
+                  stroke="#42567A"
+                  strokeWidth='2px'
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => onCircleClick(index)} 
+                />
+                {isActive && (
+                  <text
+                    x={268 + 265 * Math.cos(angle)}
+                    y={265 + 265 * Math.sin(angle) + 7}
+                    textAnchor="middle"
+                    fill="#42567A"
+                    fontSize="20"
+                    cursor='pointer'
+                    pointerEvents="none"
+                  >
+                    {item.periodId} 
+                  </text>
+                )}
+              </g>
+            );
+          })}
 
           {hoveredIndex !== null && (
             <text
-              x={268 + 265 * Math.cos((hoveredIndex * 2 * Math.PI) / totalPoints)}
-              y={265 + 265 * Math.sin((hoveredIndex * 2 * Math.PI) / totalPoints) + 7}
+              x={268 + 265 * Math.cos((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180))}
+              y={265 + 265 * Math.sin((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180)) + 7}
               textAnchor="middle"
               fill="#42567A"
               fontSize="20"
@@ -76,4 +95,3 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex, onCircleCl
     </div>
   );
 };
-

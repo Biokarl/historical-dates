@@ -37,7 +37,7 @@ export const App = () => {
   };
 
   const handleCircleClick = (index: number) => {
-    setCurrentIndex(index); // Обновляем currentIndex при клике на круг
+    setCurrentIndex(index);
   };
 
   return (
@@ -46,7 +46,7 @@ export const App = () => {
         rotateBackward={rotateBackward}
         rotateForward={rotateForward}
         currentIndex={currentIndex}
-        onCircleClick={handleCircleClick} // Передаем обработчик клика
+        onCircleClick={handleCircleClick}
       />
       <Header />
       <TimePeriod currentIndex={currentIndex} />

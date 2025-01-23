@@ -23,6 +23,7 @@ export const App = () => {
       setIsAnimating(false);
     }, 1000);
   };
+
   const handlePrevRotate = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -35,22 +36,27 @@ export const App = () => {
     }, 1000);
   };
 
+  const handleCircleClick = (index: number) => {
+    setCurrentIndex(index); // Обновляем currentIndex при клике на круг
+  };
+
   return (
     <div>
       <Circle
         rotateBackward={rotateBackward}
         rotateForward={rotateForward}
         currentIndex={currentIndex}
+        onCircleClick={handleCircleClick} // Передаем обработчик клика
       />
       <Header />
-      <TimePeriod />
+      <TimePeriod currentIndex={currentIndex} />
       <Pagination
         isAnimating={isAnimating}
         onPrevClick={handlePrevRotate}
         onNextClick={handleNextRotate}
         currentIndex={currentIndex}
       />
-      <WrapperTime />
+      <WrapperTime currentIndex={currentIndex} />
     </div>
   );
 };

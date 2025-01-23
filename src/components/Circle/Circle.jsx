@@ -3,7 +3,7 @@ import styles from "./Circle.module.scss";
 import gsap from "gsap";
 import { initialDate } from '../../initialDate';
 
-export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
+export const Circle = ({ rotateForward, rotateBackward, currentIndex, onCircleClick }) => {
   const circleRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const totalPoints = initialDate.length;
@@ -12,7 +12,7 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
   useEffect(() => {
     if (rotateForward) {
       gsap.to(circleRef.current, {
-        rotation: `-=${anglePerIndex * currentIndex}`, // Поворачиваем до текущего индекса
+        rotation: `-=${anglePerIndex}`, 
         transformOrigin: "center center",
         duration: 1,
         ease: "power1.inOut",
@@ -21,13 +21,13 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
 
     if (rotateBackward) {
       gsap.to(circleRef.current, {
-        rotation: `+=${anglePerIndex * currentIndex}`, 
+        rotation: `+=${anglePerIndex}`, 
         transformOrigin: "center center",
         duration: 1,
         ease: "power1.inOut",
       });
     }
-  }, [rotateForward, rotateBackward, currentIndex]);
+  }, [rotateForward, rotateBackward]);
 
   return (
     <div className={styles.root}>
@@ -50,10 +50,11 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
               cy={265 + 265 * Math.sin((index * 2 * Math.PI) / totalPoints)}
               r="3"
               fill="#42567A"
-              stroke="#42567a"
+              stroke="#42567A"
               strokeWidth='2px'
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => onCircleClick(index)} // Handle click event
             />
           ))}
 
@@ -66,7 +67,6 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
               fontSize="20"
               cursor='pointer'
               pointerEvents="none"
-              
             >
               {initialDate[hoveredIndex].periodId}
             </text>
@@ -76,3 +76,4 @@ export const Circle = ({ rotateForward, rotateBackward, currentIndex }) => {
     </div>
   );
 };
+

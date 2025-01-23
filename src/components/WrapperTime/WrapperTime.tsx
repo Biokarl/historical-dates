@@ -5,7 +5,7 @@ import styles from "./WrapperTime.module.scss";
 import { Pagination } from "../Pagination/Pagination";
 import gsap from "gsap";
 
-export const WrapperTime = () => {
+export const WrapperTime = ({ currentIndex }) => {
   const wrapperRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -81,7 +81,7 @@ export const WrapperTime = () => {
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
       >
-        <Time />
+        <Time currentIndex={currentIndex} />
       </div>
       {showRightArrow && (
         <button className={styles.arrow} onClick={scrollToRight}>

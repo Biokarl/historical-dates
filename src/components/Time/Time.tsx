@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { initialDate } from "../../initialDate";
 
 interface TimeProps {
-  currentIndex: number; // Добавляем пропс для текущего индекса
+  currentIndex: number;
 }
 
 export const Time: React.FC<TimeProps> = ({ currentIndex }) => {

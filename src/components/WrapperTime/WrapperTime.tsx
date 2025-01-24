@@ -1,69 +1,90 @@
-// @ts-nocheck
 import React, { useEffect, useRef, useState } from "react";
 import { Time } from "../Time/Time";
 import styles from "./WrapperTime.module.scss";
-import { Pagination } from "../Pagination/Pagination";
 import gsap from "gsap";
 
-export const WrapperTime = ({ currentIndex }) => {
-  const wrapperRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
+interface WrapperTimeProps {
+  currentIndex: number;
+}
 
-  const handleMouseDown = (e) => {
+export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
+  const [scrollLeft, setScrollLeft] = useState<number>(0);
+  const [showLeftArrow, setShowLeftArrow] = useState<boolean>(false);
+  const [showRightArrow, setShowRightArrow] = useState<boolean>(false);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
-    setStartX(e.pageX - wrapperRef.current.offsetLeft);
-    setScrollLeft(wrapperRef.current.scrollLeft);
-    wrapperRef.current.style.cursor = "grabbing";
+    setStartX(e.pageX - (wrapperRef.current?.offsetLeft || 0));
+    setScrollLeft(wrapperRef.current?.scrollLeft || 0);
+    if (wrapperRef.current) {
+      wrapperRef.current.style.cursor = "grabbing";
+    }
   };
 
   const handleMouseLeave = () => {
     setIsDragging(false);
-    wrapperRef.current.style.cursor = "grab";
+    if (wrapperRef.current) {
+      wrapperRef.current.style.cursor = "grab";
+    }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    wrapperRef.current.style.cursor = "grab";
+    if (wrapperRef.current) {
+      wrapperRef.current.style.cursor = "grab";
+    }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     e.preventDefault();
-    const x = e.pageX - wrapperRef.current.offsetLeft;
+    const x = e.pageX - (wrapperRef.current?.offsetLeft || 0);
     const walk = (x - startX) * 2;
-    wrapperRef.current.scrollLeft = scrollLeft - walk;
+    if (wrapperRef.current) {
+      wrapperRef.current.scrollLeft = scrollLeft - walk;
+    }
   };
 
   const handleScroll = () => {
-    const { scrollLeft, scrollWidth, clientWidth } = wrapperRef.current;
-    setShowLeftArrow(scrollLeft > 0);
-    setShowRightArrow(scrollLeft < scrollWidth - clientWidth);
+    const { scrollLeft, scrollWidth, clientWidth } = wrapperRef.current || {};
+    if (scrollLeft !== undefined && scrollWidth !== undefined && clientWidth !== undefined) {
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth);
+    }
   };
 
   const scrollToLeft = () => {
-    gsap.to(wrapperRef.current, {
-      scrollLeft: wrapperRef.current.scrollLeft - wrapperRef.current.clientWidth,
-      duration: 0.5, // Длительность анимации
-      ease: "power1.inOut", // Эффект easing
-    });
+    if (wrapperRef.current) {
+      gsap.to(wrapperRef.current, {
+        scrollLeft: wrapperRef.current.scrollLeft - wrapperRef.current.clientWidth,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
+    }
   };
 
   const scrollToRight = () => {
-    gsap.to(wrapperRef.current, {
-      scrollLeft: wrapperRef.current.scrollLeft + wrapperRef.current.clientWidth,
-      duration: 0.5, // Длительность анимации
-      ease: "power1.inOut", // Эффект easing
-    });
+    if (wrapperRef.current) {
+      gsap.to(wrapperRef.current, {
+        scrollLeft: wrapperRef.current.scrollLeft + wrapperRef.current.clientWidth,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
+    }
   };
 
   useEffect(() => {
-    handleScroll(); // Проверяем наличие стрелок при монтировании
+    handleScroll();
+    const currentWrapper = wrapperRef.current;
     const handleScrollEvent = () => handleScroll();
-    wrapperRef.current.addEventListener("scroll", handleScrollEvent);
+    currentWrapper?.addEventListener("scroll", handleScrollEvent);
+
+    return () => {
+      currentWrapper?.removeEventListener("scroll", handleScrollEvent);
+    };
   }, []);
 
   return (

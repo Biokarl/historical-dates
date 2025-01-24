@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
-import { gsap } from "gsap"; // Импортируем GSAP
+import { gsap } from "gsap";
 import styles from "./TimePeriod.module.scss";
 import { initialDate } from "../../initialDate";
 
@@ -21,14 +21,12 @@ export const TimePeriod: React.FC<TimePeriodProps> = ({ currentIndex }) => {
     const animatedValueStart = { value: rangeStart };
     const animatedValueEnd = { value: rangeEnd };
 
-    // Анимация с использованием GSAP для rangeStart
     gsap.to(animatedValueStart, {
       value: targetStart,
-      duration: 1, // Длительность анимации в секундах
-      onUpdate: () => setRangeStart(Math.round(animatedValueStart.value)), // Обновляем состояние
+      duration: 1,
+      onUpdate: () => setRangeStart(Math.round(animatedValueStart.value)),
     });
 
-    // Анимация с использованием GSAP для rangeEnd
     gsap.to(animatedValueEnd, {
       value: targetEnd,
       duration: 1,

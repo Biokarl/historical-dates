@@ -10,6 +10,7 @@ interface CircleProps {
   onCircleClick: (index: number) => void;
   isAnimating: boolean;
   setIsAnimating: (animating: boolean) => void;
+  circleRefs: React.RefObject<(SVGGElement | null)[]>;
 }
 
 export const Circle: React.FC<CircleProps> = ({
@@ -19,14 +20,13 @@ export const Circle: React.FC<CircleProps> = ({
   onCircleClick,
   isAnimating,
   setIsAnimating,
+  circleRefs,
 }) => {
   const circleRef = useRef<SVGSVGElement | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const totalPoints = initialDate.length;
   const anglePerIndex = 360 / totalPoints;
   const angleOffset = -anglePerIndex;
-
-  const circleRefs = useRef<(SVGGElement | null)[]>(Array(totalPoints).fill(null));
 
   useEffect(() => {
     if (rotateForward || rotateBackward) {
@@ -71,13 +71,14 @@ export const Circle: React.FC<CircleProps> = ({
           <circle opacity="0.2" cx="268" cy="265" r="264.5" stroke="#42567A" />
           {initialDate.map((item, index) => {
             const isActive = index === currentIndex;
+            const isHovered = index === hoveredIndex;
             const angle = (index * anglePerIndex + angleOffset) * (Math.PI / 180);
 
             return (
               <g
-                key={index}
-                ref={(el: SVGGElement | null) => { 
-                  circleRefs.current[index] = el; 
+                key={item.periodId}
+                ref={(el: SVGGElement | null) => {
+                  circleRefs.current[index] = el;
                 }}
               >
                 <circle
@@ -101,7 +102,7 @@ export const Circle: React.FC<CircleProps> = ({
                   cursor="pointer"
                   pointerEvents="none"
                 >
-                  {isActive ? item.periodId : ""}
+                  {isHovered || isActive ? item.periodId : ""}
                 </text>
                 {isActive && !isAnimating && (
                   <text
@@ -120,20 +121,6 @@ export const Circle: React.FC<CircleProps> = ({
               </g>
             );
           })}
-
-          {hoveredIndex !== null && (
-            <text
-              x={268 + 265 * Math.cos((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180))}
-              y={265 + 265 * Math.sin((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180)) + 7}
-              textAnchor="middle"
-              fill="#42567A"
-              fontSize="20"
-              cursor="pointer"
-              pointerEvents="none"
-            >
-              {initialDate[hoveredIndex].periodId}
-            </text>
-          )}
         </svg>
       </div>
     </div>

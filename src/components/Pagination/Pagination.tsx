@@ -3,15 +3,15 @@ import styles from "./Pagination.module.scss";
 import { initialDate } from "../../initialDate";
 
 interface PaginationProps {
-  onNextClick: () => void;
-  onPrevClick: () => void;
+  handleNextRotate: () => void;
+  handlePrevRotate: () => void;
   isAnimating: boolean;
   currentIndex: number;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
-  onNextClick,
-  onPrevClick,
+  handleNextRotate,
+  handlePrevRotate,
   isAnimating,
   currentIndex,
 }) => {
@@ -25,7 +25,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           style={{ pointerEvents: isAnimating ? "none" : "auto", opacity: isAnimating ? 0.5 : 1 }}
           href="#"
           className={styles.prev}
-          onClick={onPrevClick}
+          onClick={handlePrevRotate}
         >
           &#10094;
         </a>
@@ -33,7 +33,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           style={{ pointerEvents: isAnimating ? "none" : "auto", opacity: isAnimating ? 0.5 : 1 }}
           href="#"
           className={styles.next}
-          onClick={onNextClick}
+          onClick={handleNextRotate}
         >
           &#10095;
         </a>

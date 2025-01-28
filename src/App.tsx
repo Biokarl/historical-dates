@@ -37,7 +37,7 @@ export const App = () => {
     }, 1000);
   };
 
-  const handleCircleClick = (index: number) => {
+  const onCircleClick = (index: number) => {
     if (isAnimating) return;
 
     setCurrentIndex(index);
@@ -66,7 +66,7 @@ export const App = () => {
         rotateBackward={rotateBackward}
         rotateForward={rotateForward}
         currentIndex={currentIndex}
-        onCircleClick={handleCircleClick}
+        onCircleClick={onCircleClick}
       />
       <Header />
       <TimePeriod currentIndex={currentIndex} />

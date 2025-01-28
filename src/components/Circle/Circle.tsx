@@ -26,16 +26,13 @@ export const Circle: React.FC<CircleProps> = ({
   const anglePerIndex = 360 / totalPoints;
   const angleOffset = -anglePerIndex;
 
-  const minCircleRefs = useRef<React.RefObject<SVGTextElement | null>[]>(
-    Array.from({ length: totalPoints }, () => React.createRef<SVGTextElement | null>())
-  );
+  const circleRefs = useRef<(SVGGElement | null)[]>(Array(totalPoints).fill(null));
 
   useEffect(() => {
     if (rotateForward || rotateBackward) {
       setIsAnimating(true);
 
       const rotationDirection = rotateForward ? -1 : 1;
-      const otherRotationDirection = rotateForward ? 1 : -1;
 
       gsap.to(circleRef.current, {
         rotation: `+=${rotationDirection * anglePerIndex}`,
@@ -45,10 +42,10 @@ export const Circle: React.FC<CircleProps> = ({
         onComplete: () => setIsAnimating(false),
       });
 
-      minCircleRefs.current.forEach((ref) => {
-        if (ref.current) {
-          gsap.to(ref.current, {
-            rotation: `+=${otherRotationDirection * anglePerIndex}`,
+      circleRefs.current.forEach((ref, index) => {
+        if (ref) {
+          gsap.to(ref, {
+            rotation: `-=${rotationDirection * anglePerIndex}`,
             transformOrigin: "center center",
             duration: 1,
             ease: "power1.inOut",
@@ -77,7 +74,12 @@ export const Circle: React.FC<CircleProps> = ({
             const angle = (index * anglePerIndex + angleOffset) * (Math.PI / 180);
 
             return (
-              <g key={index}>
+              <g
+                key={index}
+                ref={(el: SVGGElement | null) => { 
+                  circleRefs.current[index] = el; 
+                }}
+              >
                 <circle
                   className={styles.minCircle}
                   cx={268 + 265 * Math.cos(angle)}
@@ -90,35 +92,30 @@ export const Circle: React.FC<CircleProps> = ({
                   onMouseLeave={() => setHoveredIndex(null)}
                   onClick={() => onCircleClick(index)}
                 />
-                {isActive && (
-                  <>
-                    <text
-                      x={268 + 265 * Math.cos(angle)}
-                      y={265 + 265 * Math.sin(angle) + 7}
-                      ref={minCircleRefs.current[index]}
-                      textAnchor="middle"
-                      fill="#42567A"
-                      fontSize="20"
-                      cursor="pointer"
-                      pointerEvents="none"
-                    >
-                      {item.periodId}
-                    </text>
-                    {!isAnimating && (
-                      <text
-                        x={268 + 265 * Math.cos(angle) + 50}
-                        y={265 + 265 * Math.sin(angle) + 7}
-                        textAnchor="start"
-                        fill="#42567A"
-                        fontSize="16"
-                        fontWeight="700"
-                        cursor="pointer"
-                        pointerEvents="none"
-                      >
-                        {item.periodName}
-                      </text>
-                    )}
-                  </>
+                <text
+                  x={268 + 265 * Math.cos(angle)}
+                  y={265 + 265 * Math.sin(angle) + 7}
+                  textAnchor="middle"
+                  fill="#42567A"
+                  fontSize="20"
+                  cursor="pointer"
+                  pointerEvents="none"
+                >
+                  {isActive ? item.periodId : ""}
+                </text>
+                {isActive && !isAnimating && (
+                  <text
+                    x={268 + 265 * Math.cos(angle) + 50}
+                    y={265 + 265 * Math.sin(angle) + 7}
+                    textAnchor="start"
+                    fill="#42567A"
+                    fontSize="16"
+                    fontWeight="700"
+                    cursor="pointer"
+                    pointerEvents="none"
+                  >
+                    {item.periodName}
+                  </text>
                 )}
               </g>
             );
@@ -126,14 +123,8 @@ export const Circle: React.FC<CircleProps> = ({
 
           {hoveredIndex !== null && (
             <text
-              x={
-                268 + 265 * Math.cos((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180))
-              }
-              y={
-                265 +
-                265 * Math.sin((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180)) +
-                7
-              }
+              x={268 + 265 * Math.cos((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180))}
+              y={265 + 265 * Math.sin((hoveredIndex * anglePerIndex + angleOffset) * (Math.PI / 180)) + 7}
               textAnchor="middle"
               fill="#42567A"
               fontSize="20"

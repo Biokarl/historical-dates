@@ -45,30 +45,27 @@ export const App = () => {
 
   const onCircleClick = (index: number) => {
     if (isAnimating) return;
-
   
-
-    setCurrentIndex(index);
     setIsAnimating(true);
-
-    const topRightRotation = -index * anglePerIndex;
-
+    setCurrentIndex(index);
+  
+    // Вычисляем корректный угол поворота всего круга
+    const targetRotation = -index * anglePerIndex;
+  
     gsap.to(".circle-svg", {
-      rotation: topRightRotation,
-      transformOrigin: "center center",
+      rotation: targetRotation,
+      transformOrigin: "50% 50%",
       duration: 1,
       ease: "power1.inOut",
-      onComplete: () => {
-        setIsAnimating(false);
-      },
+      onComplete: () => setIsAnimating(false),
     });
-
-    circleRefs.current.forEach((ref, i) => {
+  
+    // Поворачиваем все элементы, чтобы они сохраняли направление
+    circleRefs.current.forEach((ref) => {
       if (ref) {
-        const elementRotation = -topRightRotation + i * anglePerIndex;
         gsap.to(ref, {
-          rotation: elementRotation,
-          transformOrigin: "center center",
+          rotation: -targetRotation, // Обратный поворот
+          transformOrigin: "50% 50%",
           duration: 1,
           ease: "power1.inOut",
         });

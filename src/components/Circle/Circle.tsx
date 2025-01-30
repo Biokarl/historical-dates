@@ -36,9 +36,11 @@ export const Circle: React.FC<CircleProps> = ({
   }, []);
 
   useEffect(() => {
-    if (rotateForward || rotateBackward) {
+    if ((rotateForward || rotateBackward) && circleRef.current && circleRefs.current.length > 0) {
       setIsAnimating(true);
+      
       const rotationDirection = rotateForward ? -1 : 1;
+  
       gsap.to(circleRef.current, {
         rotation: `+=${rotationDirection * anglePerIndex}`,
         transformOrigin: "center center",
@@ -46,6 +48,7 @@ export const Circle: React.FC<CircleProps> = ({
         ease: "power1.inOut",
         onComplete: () => setIsAnimating(false),
       });
+  
       circleRefs.current.forEach((ref, index) => {
         if (ref) {
           gsap.to(ref, {

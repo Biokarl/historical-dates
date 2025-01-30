@@ -9,14 +9,13 @@ interface WrapperTimeProps {
 
 export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number>(0);
-  const [endX, setEndX] = useState<number>(0);
-  const [startTime, setStartTime] = useState<number>(0);
-  const [scrollLeft, setScrollLeft] = useState<number>(0);
-  const [showArrows, setShowArrows] = useState<boolean>(window.innerWidth > 768);
-  const [showLeftArrow, setShowLeftArrow] = useState<boolean>(false);
-  const [showRightArrow, setShowRightArrow] = useState<boolean>(true);
+  const leftArrowRef = useRef<HTMLButtonElement | null>(null);
+  const rightArrowRef = useRef<HTMLButtonElement | null>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startTimeRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const [showArrows, setShowArrows] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     const handleResize = () => setShowArrows(window.innerWidth > 768);
@@ -27,8 +26,13 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
   const updateArrowsVisibility = () => {
     if (wrapperRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = wrapperRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
+      const hasLeft = scrollLeft > 0;
+      const hasRight = scrollLeft + clientWidth < scrollWidth;
+
+      if (leftArrowRef.current && rightArrowRef.current) {
+        gsap.to(leftArrowRef.current, { opacity: hasLeft ? 1 : 0, scale: hasLeft ? 1 : 0.8, duration: 0.3, pointerEvents: hasLeft ? "auto" : "none" });
+        gsap.to(rightArrowRef.current, { opacity: hasRight ? 1 : 0, scale: hasRight ? 1 : 0.8, duration: 0.3, pointerEvents: hasRight ? "auto" : "none" });
+      }
     }
   };
 
@@ -42,70 +46,65 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
     return () => currentWrapper.removeEventListener("scroll", updateArrowsVisibility);
   }, []);
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX);
-    setStartTime(Date.now());
-    setScrollLeft(wrapperRef.current?.scrollLeft || 0);
+  const handleStart = (clientX: number) => {
+    isDraggingRef.current = true;
+    startXRef.current = clientX;
+    startTimeRef.current = Date.now();
+    scrollLeftRef.current = wrapperRef.current?.scrollLeft || 0;
   };
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    setEndX(e.touches[0].clientX);
-    const x = e.touches[0].clientX;
-    const walk = (x - startX) * 2;
-    if (wrapperRef.current) {
-      wrapperRef.current.scrollLeft = scrollLeft - walk;
-    }
+  const handleMove = (clientX: number) => {
+    if (!isDraggingRef.current || !wrapperRef.current) return;
+    const walk = (clientX - startXRef.current) * 2;
+    wrapperRef.current.scrollLeft = scrollLeftRef.current - walk;
   };
 
-  
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    const swipeDistance = endX - startX;
-    const swipeDuration = Date.now() - startTime;
-    const swipeSpeed = Math.abs(swipeDistance / swipeDuration); 
+  const handleEnd = (clientX: number) => {
+    isDraggingRef.current = false;
 
-    if (wrapperRef.current) {
-      const { scrollLeft, clientWidth, scrollWidth } = wrapperRef.current;
-      const threshold = 0.5;
+    if (!wrapperRef.current) return;
+    const { scrollLeft, clientWidth, scrollWidth } = wrapperRef.current;
+    const swipeDistance = clientX - startXRef.current;
+    const swipeDuration = Date.now() - startTimeRef.current;
+    const swipeSpeed = Math.abs(swipeDistance / swipeDuration);
+    const swipeMultiplier = Math.min(10, Math.max(2, swipeSpeed * 10));
 
-      if (swipeSpeed > threshold) {
-        if (swipeDistance > 0) {
-          gsap.to(wrapperRef.current, {
-            scrollLeft: 0,
-            duration: 0.7,
-            ease: "power2.out",
-          });
-        } else {
-          gsap.to(wrapperRef.current, {
-            scrollLeft: scrollWidth - clientWidth,
-            duration: 0.7,
-            ease: "power2.out",
-          });
-        }
-      }
-    }
+    let newScrollLeft = scrollLeft - swipeDistance * swipeMultiplier;
+    newScrollLeft = Math.max(0, Math.min(newScrollLeft, scrollWidth - clientWidth));
+
+    gsap.to(wrapperRef.current, { scrollLeft: newScrollLeft, duration: 0.5, ease: "power3.out" });
   };
 
   return (
     <div className={styles.root}>
-      {showArrows && showLeftArrow && (
-        <button className={styles.arrow} onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft - wrapperRef.current!.clientWidth, duration: 0.5, ease: "power1.inOut" })}>
+      {showArrows && (
+        <button
+          ref={leftArrowRef}
+          className={styles.arrow}
+          onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft - wrapperRef.current!.clientWidth, duration: 0.5, ease: "power2.inOut" })}
+        >
           &#10094;
         </button>
       )}
       <div
         className={styles.container}
         ref={wrapperRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onMouseDown={(e) => handleStart(e.clientX)}
+        onMouseMove={(e) => handleMove(e.clientX)}
+        onMouseUp={(e) => handleEnd(e.clientX)}
+        onMouseLeave={() => (isDraggingRef.current = false)}
+        onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+        onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+        onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientX)}
       >
         <Time currentIndex={currentIndex} />
       </div>
-      {showArrows && showRightArrow && (
-        <button className={styles.arrow} onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft + wrapperRef.current!.clientWidth, duration: 0.5, ease: "power1.inOut" })}>
+      {showArrows && (
+        <button
+          ref={rightArrowRef}
+          className={styles.arrow}
+          onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft + wrapperRef.current!.clientWidth, duration: 0.5, ease: "power2.inOut" })}
+        >
           &#10095;
         </button>
       )}

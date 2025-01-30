@@ -49,9 +49,15 @@ export const App = () => {
     setIsAnimating(true);
     setCurrentIndex(index);
   
+    const circleSvg = document.querySelector(".circle-svg");
+    if (!circleSvg) {
+      setIsAnimating(false);
+      return; 
+    }
+  
     const targetRotation = -index * anglePerIndex;
   
-    gsap.to(".circle-svg", {
+    gsap.to(circleSvg, {
       rotation: targetRotation,
       transformOrigin: "50% 50%",
       duration: 1,
@@ -62,7 +68,7 @@ export const App = () => {
     circleRefs.current.forEach((ref) => {
       if (ref) {
         gsap.to(ref, {
-          rotation: -targetRotation, 
+          rotation: -targetRotation,
           transformOrigin: "50% 50%",
           duration: 1,
           ease: "power1.inOut",

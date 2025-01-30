@@ -11,16 +11,15 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>(0);
+  const [endX, setEndX] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(0);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [showArrows, setShowArrows] = useState<boolean>(window.innerWidth > 768);
   const [showLeftArrow, setShowLeftArrow] = useState<boolean>(false);
   const [showRightArrow, setShowRightArrow] = useState<boolean>(true);
 
   useEffect(() => {
-    const handleResize = () => {
-      setShowArrows(window.innerWidth > 768);
-    };
-
+    const handleResize = () => setShowArrows(window.innerWidth > 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -43,36 +42,16 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
     return () => currentWrapper.removeEventListener("scroll", updateArrowsVisibility);
   }, []);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (wrapperRef.current?.offsetLeft || 0));
-    setScrollLeft(wrapperRef.current?.scrollLeft || 0);
-    if (wrapperRef.current) {
-      wrapperRef.current.style.cursor = "grabbing";
-    }
-  };
-
-  const handleMouseLeave = () => setIsDragging(false);
-  const handleMouseUp = () => setIsDragging(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (wrapperRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2;
-    if (wrapperRef.current) {
-      wrapperRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
-
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
+    setStartTime(Date.now());
     setScrollLeft(wrapperRef.current?.scrollLeft || 0);
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging) return;
+    setEndX(e.touches[0].clientX);
     const x = e.touches[0].clientX;
     const walk = (x - startX) * 2;
     if (wrapperRef.current) {
@@ -80,44 +59,45 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
     }
   };
 
-  const handleTouchEnd = () => setIsDragging(false);
+  
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    const swipeDistance = endX - startX;
+    const swipeDuration = Date.now() - startTime;
+    const swipeSpeed = Math.abs(swipeDistance / swipeDuration); 
 
-  const scrollToLeft = () => {
     if (wrapperRef.current) {
-      gsap.to(wrapperRef.current, {
-        scrollLeft: wrapperRef.current.scrollLeft - wrapperRef.current.clientWidth,
-        duration: 0.5,
-        ease: "power1.inOut",
-        onUpdate: updateArrowsVisibility, 
-      });
-    }
-  };
+      const { scrollLeft, clientWidth, scrollWidth } = wrapperRef.current;
+      const threshold = 0.5;
 
-  const scrollToRight = () => {
-    if (wrapperRef.current) {
-      gsap.to(wrapperRef.current, {
-        scrollLeft: wrapperRef.current.scrollLeft + wrapperRef.current.clientWidth,
-        duration: 0.5,
-        ease: "power1.inOut",
-        onUpdate: updateArrowsVisibility,
-      });
+      if (swipeSpeed > threshold) {
+        if (swipeDistance > 0) {
+          gsap.to(wrapperRef.current, {
+            scrollLeft: 0,
+            duration: 0.7,
+            ease: "power2.out",
+          });
+        } else {
+          gsap.to(wrapperRef.current, {
+            scrollLeft: scrollWidth - clientWidth,
+            duration: 0.7,
+            ease: "power2.out",
+          });
+        }
+      }
     }
   };
 
   return (
     <div className={styles.root}>
       {showArrows && showLeftArrow && (
-        <button className={styles.arrow} onClick={scrollToLeft}>
+        <button className={styles.arrow} onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft - wrapperRef.current!.clientWidth, duration: 0.5, ease: "power1.inOut" })}>
           &#10094;
         </button>
       )}
       <div
         className={styles.container}
         ref={wrapperRef}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -125,7 +105,7 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
         <Time currentIndex={currentIndex} />
       </div>
       {showArrows && showRightArrow && (
-        <button className={styles.arrow} onClick={scrollToRight}>
+        <button className={styles.arrow} onClick={() => gsap.to(wrapperRef.current, { scrollLeft: wrapperRef.current!.scrollLeft + wrapperRef.current!.clientWidth, duration: 0.5, ease: "power1.inOut" })}>
           &#10095;
         </button>
       )}

@@ -7,7 +7,6 @@
     .container {
       display: flex;
       justify-content: flex-start; 
-      margin-top: 55px;
       overflow: hidden;
       overflow-x: hidden;
       cursor: grab;
@@ -37,9 +36,14 @@
   
   @media (max-width: 1000px) {
     .root {
-      margin-top: 100px;
+      margin-top: 55px;
       position: relative; 
     }
+
+    .container {
+      margin-top: 55px;
+    }
+
   
     .root::before {
       content: '';

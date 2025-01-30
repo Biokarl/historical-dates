@@ -93,8 +93,9 @@ export const Circle: React.FC<CircleProps> = ({
               const isHovered = index === hoveredIndex;
               const angle = (index * anglePerIndex + angleOffset) * (Math.PI / 180);
               return (
-                //@ts-ignore
-                <g key={item.periodId} ref={(el) => (circleRefs.current[index] = el)}>
+                <g key={item.periodId} ref={(el) => {
+                  if (el) circleRefs.current[index] = el;
+                }}>
                   <circle
                     className={styles.minCircle}
                     cx={268 + 265 * Math.cos(angle)}

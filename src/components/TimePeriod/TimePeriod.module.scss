@@ -28,4 +28,10 @@
     font-size: 56px;
     gap: 30px;
   }
+
+  @media (max-width: 320px) {
+    margin-top: 50px;
+    font-size: 56px;
+    gap: 30px;
+  }
 }

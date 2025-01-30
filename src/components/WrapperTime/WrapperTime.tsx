@@ -88,14 +88,14 @@ export const WrapperTime: React.FC<WrapperTimeProps> = ({ currentIndex }) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.root}>
       {showLeftArrow && (
         <button className={styles.arrow} onClick={scrollToLeft}>
           &#10094;
         </button>
       )}
       <div
-        className={styles.root}
+        className={styles.container}
         ref={wrapperRef}
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}

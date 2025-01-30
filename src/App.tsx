@@ -49,7 +49,6 @@ export const App = () => {
     setIsAnimating(true);
     setCurrentIndex(index);
   
-    // Вычисляем корректный угол поворота всего круга
     const targetRotation = -index * anglePerIndex;
   
     gsap.to(".circle-svg", {
@@ -60,11 +59,10 @@ export const App = () => {
       onComplete: () => setIsAnimating(false),
     });
   
-    // Поворачиваем все элементы, чтобы они сохраняли направление
     circleRefs.current.forEach((ref) => {
       if (ref) {
         gsap.to(ref, {
-          rotation: -targetRotation, // Обратный поворот
+          rotation: -targetRotation, 
           transformOrigin: "50% 50%",
           duration: 1,
           ease: "power1.inOut",
@@ -86,13 +84,15 @@ export const App = () => {
       />
       <Header />
       <TimePeriod currentIndex={currentIndex} />
-      <Pagination
-        isAnimating={isAnimating}
-        handlePrevRotate={handlePrevRotate}
-        handleNextRotate={handleNextRotate}
-        currentIndex={currentIndex}
-      />
-      <WrapperTime currentIndex={currentIndex} />
+      <div className="wrapper__pagination">
+        <Pagination
+          isAnimating={isAnimating}
+          handlePrevRotate={handlePrevRotate}
+          handleNextRotate={handleNextRotate}
+          currentIndex={currentIndex}
+        />
+        <WrapperTime currentIndex={currentIndex} />
+      </div>
     </div>
   );
 };

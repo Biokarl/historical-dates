@@ -13,6 +13,7 @@
     position: absolute;
     right: 100px;
     top: 10px;
+    
   }
 
   .tittle {
@@ -36,4 +37,17 @@
     cursor: pointer;
     
   }
+
+  
 }
+
+@media (max-width: 1000px) {
+   
+  .root{
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
